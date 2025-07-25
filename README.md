@@ -1,307 +1,273 @@
-# 日志命令生成器 MCP 服务器 v2.0
+# MCP Log Server - 智能日志分析服务 v2.3.0
 
-这是一个基于 [mcp-go](https://github.com/mark3labs/mcp-go) SDK 构建的智能日志命令生成器，支持通过自然语言生成日志查看命令，并集成Ollama AI模型进行日志分析。
+基于 [mcp-go](https://github.com/mark3labs/mcp-go) SDK 构建的智能日志分析服务，支持多环境日志查询、时间范围过滤和AI智能分析。
 
-## 🚀 功能特性
+## 🚀 核心功能
 
-- 🔧 **智能命令生成**: 根据环境、日志类型、关键词等参数生成SSH日志查看命令
-- 🌍 **多环境支持**: 支持dev、test、staging、prod等环境
-- 📝 **多日志类型**: 支持blackhole、oms、api、error等日志文件
-- 🔍 **关键词过滤**: 支持根据关键词过滤日志内容
-- 🤖 **AI智能分析**: 集成Ollama模型，支持日志内容智能分析
-- 💬 **AI问答**: 支持通过AI回答运维相关问题
-- 📊 **模块化设计**: 清晰的包结构，易于维护和扩展
+- 🌍 **多环境支持**: 支持 dev、test、staging、prod 四个环境
+- 📁 **本地日志管理**: 本地文件系统存储，支持动态路径配置
+- 🔍 **设备级查询**: 按设备ID精准查询日志记录
+- ⏰ **时间范围过滤**: 支持精确的时间范围查询
+- 🤖 **AI智能分析**: 集成Ollama，提供专业的日志分析报告
+- 📊 **结构化输出**: 清晰的markdown格式分析报告
 
-## 📁 项目结构
+## 📁 项目架构
 
 ```
 mcp-log-server/
 ├── main.go                    # 主程序入口
 ├── internal/
 │   ├── config/
-│   │   └── config.go         # 配置管理
+│   │   └── config.go         # 多环境配置管理
 │   ├── handlers/
-│   │   ├── log_commands.go   # 日志命令处理器
-│   │   └── ollama_handlers.go # AI处理器
+│   │   └── log_commands.go   # 日志命令处理器
 │   └── ollama/
-│       └── client.go         # Ollama客户端
+│       └── client.go         # Ollama AI客户端
+├── logs/                      # 日志文件存储
+│   ├── dev/                   # 开发环境日志
+│   │   ├── oms.log
+│   │   └── blackhole.log
+│   ├── test/                  # 测试环境日志
+│   │   ├── oms.log
+│   │   └── blackhole.log
+│   ├── staging/               # 预发布环境日志
+│   │   ├── oms.log
+│   │   └── blackhole.log
+│   └── prod/                  # 生产环境日志
+│       ├── oms.log
+│       └── blackhole.log
 ├── go.mod
 ├── go.sum
 └── README.md
 ```
 
-## 🛠️ 安装和运行
+## 🛠️ 快速开始
 
 ### 1. 环境要求
 
-- Go 1.21 或更高版本
-- Ollama (可选，用于AI功能)
+- Go 1.21+
+- Ollama (用于AI分析功能)
 
-### 2. 安装Ollama (可选)
-
-如果需要使用AI分析功能，请先安装Ollama：
+### 2. 安装 Ollama
 
 ```bash
 # macOS
 brew install ollama
 
-# 或从官网下载: https://ollama.ai
-
-# 启动Ollama服务
+# 启动服务
 ollama serve
 
-# 下载模型
-ollama pull qwen2.5:0.5b
+# 下载推荐模型
+ollama pull gemma3:27b
 ```
 
-### 3. 构建服务器
+### 3. 构建项目
 
 ```bash
+git clone <your-repo-url>
+cd mcp-log-server
 go mod tidy
-go build -o mcp-server main.go
+go build -o mcp-server .
 ```
 
-### 4. 配置MCP客户端
+### 4. 配置 MCP 客户端
 
-#### 在 Cursor 中使用
-
-编辑 `~/.cursor/mcp.json`:
+#### Cursor 配置 (`~/.cursor/mcp.json`)
 
 ```json
 {
   "mcpServers": {
-    "log-command-generator": {
-      "command": "/path/to/your/mcp-server"
+    "mcp-log-server": {
+      "command": "/path/to/mcp-log-server/mcp-server"
     }
   }
 }
 ```
 
-#### 在 Claude Desktop 中使用
-
-编辑配置文件:
+#### Claude Desktop 配置
 
 ```json
 {
   "mcpServers": {
-    "log-command-generator": {
-      "command": "/path/to/your/mcp-server"
+    "mcp-log-server": {
+      "command": "/path/to/mcp-log-server/mcp-server"
     }
   }
 }
 ```
 
-## 🔧 可用工具
+## 🔧 核心工具
 
-### 1. generate_log_command
-生成日志查看命令
+### `query_device_logs_by_time` - 主要功能
 
-**参数**:
-- `environment` (必需): 环境名称 (dev/test/staging/prod)
-- `log_type` (必需): 日志类型 (blackhole/黑洞/oms/api/error/错误)
-- `keyword` (可选): 搜索关键词
-- `lines` (可选): 显示行数，默认1000
-
-### 2. generate_and_analyze_log
-生成日志查看命令，自动执行并使用AI分析结果
+按设备ID和时间范围查询日志，并提供AI智能分析。
 
 **参数**:
-- `environment` (必需): 环境名称 (dev/test/staging/prod)
-- `log_type` (必需): 日志类型 (blackhole/黑洞/oms/api/error/错误)
-- `keyword` (可选): 搜索关键词
-- `lines` (可选): 显示行数，默认100行
-- `issue_description` (可选): 问题描述，帮助AI更好地分析
-- `model` (可选): AI模型名称
-
-### 3. query_device_logs_by_time ⭐ 新功能
-按设备ID和时间范围查询日志并进行AI分析
-
-**参数**:
-- `environment` (必需): 环境名称 (dev/test/staging/prod)
-- `log_type` (必需): 日志类型 (blackhole/黑洞/oms/api/error/错误)
+- `environment` (必需): 环境名称 (`dev`/`test`/`staging`/`prod`)
+- `log_type` (必需): 日志类型 (`oms`/`blackhole`)
 - `device_id` (必需): 设备ID
-- `days` (可选): 查询天数，默认2天
-- `issue_description` (可选): 问题描述，帮助AI更好地分析
-- `model` (可选): AI模型名称
-
-### 4. ask_ollama
-调用Ollama模型进行问答
-
-**参数**:
-- `prompt` (必需): 问题或内容
-- `model` (可选): 模型名称，默认qwen2.5:0.5b
-- `context` (可选): 上下文信息
-
-### 5. analyze_log_with_ai
-使用AI分析日志内容
-
-**参数**:
-- `log_content` (必需): 要分析的日志内容
-- `issue_description` (可选): 问题描述
-- `model` (可选): 模型名称
-
-### 6. list_environments
-列出所有可用环境
-
-### 7. list_log_types  
-列出所有支持的日志类型
+- `start_time` (可选): 开始时间 (格式: `2025-07-24 11:59:38.369`)
+- `end_time` (可选): 结束时间 (格式: `2025-07-24 11:59:38.369`)
+- `keyword` (可选): 搜索关键词
+- `lines` (可选): 查询行数 (默认: 2000)
+- `model` (可选): AI分析模型
 
 ## 💡 使用示例
 
-### 基本日志查看
-**你**: "帮我生成一个查看dev环境blackhole日志的命令"
+### 基础设备查询
 
-**AI**: 会生成类似这样的命令：
-```bash
-ssh deploy@dev-server.company.com 'tail -1000 /var/log/app/blackhole.log'
+```
+用户: "查看设备1234在开发环境的日志"
 ```
 
-### 带关键词过滤
-**你**: "看test环境的error日志，搜索包含'timeout'的记录"
+AI会调用工具查询 `dev` 环境中设备 `1234` 的最新日志，并提供智能分析。
 
-**AI**: 会生成：
-```bash
-ssh deploy@test-server.company.com 'tail -1000 /var/log/app/error.log | grep -i "timeout"'
+### 时间范围查询
+
+```
+用户: "查看设备1234在7月25日的OMS日志"
 ```
 
-### 设备日志查询 ⭐ 新功能
-**你**: "帮我输出oms开发环境 1234设备最近两天的日志"
+AI会查询指定日期范围内的日志记录。
 
-**AI**: 会调用 `query_device_logs_by_time` 工具:
-- 自动生成查询命令: `ssh develop@mm01.sca.im -p 59822 'find $(dirname /data/develop/oms/logs/oms.log) -name "*.log*" -mtime -2 -exec grep -l "1234" {} \; | head -10 | xargs grep "1234" | tail -500'`
-- 自动执行获取日志内容
-- AI智能分析后提供:
-  - 🔍 设备状态分析: 设备1234在最近两天的运行情况
-  - 🎯 问题识别: 发现的错误或异常情况
-  - 💡 解决建议: 针对性的修复建议
-  - 📈 趋势分析: 设备运行趋势和性能指标
+### 跨环境对比
 
-**使用参数**:
-- 环境: `dev` (开发环境)
-- 日志类型: `oms` (OMS系统日志)
-- 设备ID: `1234`
-- 时间范围: 最近2天
+```
+用户: "对比设备1234在测试环境和生产环境的表现"
+```
 
-### AI日志分析
-**你**: "分析这段日志内容：[粘贴日志内容]"
+AI会分别查询两个环境的日志并进行对比分析。
 
-**AI**: 会调用Ollama模型分析日志，提供：
-- 错误识别
-- 问题原因分析
-- 解决建议
-- 系统状态总结
+## 📊 AI分析报告格式
 
-### AI问答
-**你**: "什么情况下会出现数据库连接超时？"
+每次查询都会生成结构化的分析报告：
 
-**AI**: 会基于运维知识回答相关问题
+```markdown
+## 🔍 异常识别与分类
+- 错误日志统计和分类
+- 警告信息汇总
+- 异常模式识别
+
+## 📈 系统状态评估  
+- 设备运行状态
+- 性能指标分析
+- 通信状态评估
+
+## ⚠️ 风险评估
+- 紧急程度分级
+- 影响范围评估
+- 具体建议措施
+
+## 📋 日志统计摘要
+- 时间范围
+- 日志级别统计
+- 涉及设备清单
+```
+
+## 🌍 多环境配置
+
+### 支持的环境
+
+| 环境 | 说明 | 主机配置 |
+|------|------|----------|
+| `dev` | 开发环境 | localhost |
+| `test` | 测试环境 | test.example.com |
+| `staging` | 预发布环境 | staging.example.com |
+| `prod` | 生产环境 | prod.example.com |
+
+### 日志类型
+
+| 类型 | 描述 | 文件路径 |
+|------|------|----------|
+| `oms` | OMS系统日志 | `/logs/{env}/oms.log` |
+| `blackhole` | 黑洞服务日志 | `/logs/{env}/blackhole.log` |
 
 ## ⚙️ 配置自定义
 
-可以修改 `internal/config/config.go` 中的配置：
+修改 `internal/config/config.go` 添加新环境或日志类型：
 
 ```go
-// 修改环境配置
-"dev": {
-    Name: "开发环境",
-    Host: "your-dev-server.com",
-    User: "your-user",
+// 添加新环境
+"staging": {
+    Name: "预发布环境",
+    Host: "staging.example.com",
+    User: "staginguser",
     Port: "22",
 },
 
-// 修改日志文件配置
-"blackhole": {
-    Name:        "blackhole",
-    Path:        "/your/log/path/blackhole.log",
-    Description: "黑洞服务日志",
-    Aliases:     []string{"黑洞"},
-},
-
-// 修改Ollama配置
-Ollama: OllamaConfig{
-    BaseURL:      "http://localhost:11434",
-    DefaultModel: "your-preferred-model",
-    Timeout:      30,
+// 添加新日志类型
+"api": {
+    Name:        "api",
+    Path:        "", // 动态路径
+    Description: "API服务日志",
+    Aliases:     []string{"接口"},
 },
 ```
 
-## 🔄 典型工作流
+## 📈 版本历史
 
-1. **问题报告**: "客户说数据有问题"
-2. **生成命令**: "帮我看下prod环境的blackhole日志"
-3. **执行命令**: 复制生成的SSH命令到终端执行
-4. **AI分析**: "分析这段日志内容，重点关注数据同步问题"
-5. **获得建议**: AI提供问题诊断和解决方案
+### v2.3.0 - 多环境支持 (当前版本)
+- ✨ 支持四个独立环境 (dev/test/staging/prod)
+- ✨ 动态日志文件路径配置
+- ✨ 跨日期的时间范围查询
+- ✨ 改进的AI分析提示词
+- 🔧 本地文件系统存储
 
-## 🚀 版本历史
+### v2.2.0 - 设备查询功能
+- ✨ 按设备ID查询日志
+- ✨ 时间范围过滤支持
+- ✨ 结构化AI分析报告
 
-- **v2.2.0**: 新增设备日志查询功能，支持按设备ID和时间范围查询日志
-- **v2.1.0**: 新增智能日志分析工作流，支持一键生成命令→自动执行→AI智能分析
-- **v2.0.0**: 重构代码结构，支持模块化设计，集成Ollama AI功能
-- **v1.0.0**: 基础日志命令生成功能
+### v2.1.0 - AI集成
+- ✨ Ollama AI分析集成
+- ✨ 智能日志解读
+- ✨ 问题诊断建议
+
+### v2.0.0 - 架构重构
+- 🔧 模块化代码结构
+- 🔧 配置管理优化
+- 🔧 MCP协议支持
+
+## 🔍 故障排除
+
+### 常见问题
+
+1. **日志文件不存在**
+   - 检查日志文件路径配置
+   - 确认文件读取权限
+
+2. **AI分析失败**
+   - 检查Ollama服务状态
+   - 确认模型是否正确下载
+
+3. **时间范围查询无结果**
+   - 验证时间格式 (`2025-07-24 11:59:38.369`)
+   - 检查日志文件中是否有对应时间段的数据
+
+### 调试模式
+
+```bash
+# 启动时查看详细日志
+./mcp-server --debug
+```
+
+## 🤝 贡献指南
+
+1. Fork 项目
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 创建 Pull Request
 
 ## 📄 许可证
 
-MIT License
+MIT License - 详见 [LICENSE](LICENSE) 文件
 
-## 🆕 v2.1.0 新功能
+## 🙏 致谢
 
-### 智能日志分析工作流
+- [mcp-go](https://github.com/mark3labs/mcp-go) - MCP协议Go实现
+- [Ollama](https://ollama.ai) - 本地AI模型运行环境
 
-现在支持**一键生成命令→自动执行→AI智能分析**的完整工作流！
+---
 
-#### 新增工具: `generate_and_analyze_log`
-
-这个强大的新工具会：
-1. 🔧 根据你的参数生成SSH日志查看命令
-2. ⚡ 自动执行命令获取日志内容  
-3. 🤖 使用Ollama AI模型智能分析日志
-4. 📊 提供完整的分析报告和建议
-
-**参数**:
-- `environment` (必需): 环境名称
-- `log_type` (必需): 日志类型  
-- `keyword` (可选): 搜索关键词
-- `lines` (可选): 显示行数，默认100行
-- `issue_description` (可选): 问题描述，帮助AI更精准分析
-- `model` (可选): 指定AI模型
-
-### 使用示例
-
-#### 场景1: 快速问题诊断
-**你**: "客户反馈登录失败，帮我分析dev环境的api日志，关键词是login"
-
-**AI**: 会调用 `generate_and_analyze_log` 工具:
-- 生成命令: `ssh deploy@dev-server.company.com 'tail -100 /var/log/app/api.log | grep -i "login"'`
-- 自动执行获取日志
-- AI分析后提供:
-  - 🔍 错误识别: 发现认证失败
-  - 🎯 问题原因: Token过期或用户权限问题
-  - 💡 解决建议: 检查认证服务状态，更新用户权限配置
-  - 📈 系统状态: 整体稳定，仅个别用户受影响
-
-#### 场景2: 性能问题分析
-**你**: "prod环境响应很慢，帮我看下oms日志，重点关注性能问题"
-
-**AI**: 会:
-- 执行: `ssh deploy@prod-server.company.com 'tail -100 /var/log/app/oms.log'`
-- 分析性能相关指标
-- 提供优化建议
-
-### 工具对比
-
-| 工具名称 | 功能 | 适用场景 |
-|---------|------|----------|
-| `generate_log_command` | 仅生成命令 | 需要手动执行命令时 |
-| `generate_and_analyze_log` | 生成+执行+AI分析 | 快速问题诊断和分析 |
-| `analyze_log_with_ai` | 分析已有日志内容 | 已获取日志，需要AI分析 |
-
-### 安全说明
-
-⚠️ **重要**: `generate_and_analyze_log` 工具会实际执行SSH命令，请确保:
-- SSH密钥配置正确
-- 服务器连接安全可靠  
-- 具有相应的日志文件读取权限
-- 在受信任的网络环境中使用
-
-如果不希望自动执行命令，请使用 `generate_log_command` 工具仅生成命令。
+**🚀 立即开始使用智能日志分析，让AI帮助您快速定位和解决系统问题！**
