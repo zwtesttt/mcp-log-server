@@ -1,0 +1,103 @@
+2025-07-24 15:43:47.123 INFO [test1] Device status check: SOC=85%, Battery=normal, Grid=stable
+2025-07-24 15:43:48.456 INFO [test2] POST /internal/CXRqKjx2MzSAkdyucR9NDyPiiQR2vQcQ/add-exceptions - 200 {"status":1,"msg":"","result":null}
+2025-07-24 15:43:49.789 WARN [test3] Grid voltage fluctuation detected: 218V -> 215V
+2025-07-24 15:44:10.234 ERROR [test4] Exception 1204: Grid RMS Undervoltage Level 2 at timestamp 1753349374000
+2025-07-24 15:44:11.567 ERROR [test5] Exception 1205: Instantaneous Undervoltage of Grid at timestamp 1753349374000
+2025-07-24 15:44:15.890 INFO [test1] Battery charging started: Current=15A, Voltage=48V
+2025-07-24 15:44:20.123 INFO [test2] System startup completed successfully
+2025-07-24 15:44:25.456 WARN [test3] Temperature warning: Battery temp=45°C
+2025-07-24 15:44:30.789 INFO [test4] Communication with meter restored
+2025-07-24 15:44:35.012 ERROR [test5] Connection timeout to external service
+2025-07-24 15:44:40.345 INFO [test1] Power consumption: Load=1200W, Solar=800W, Grid=400W
+2025-07-24 15:44:45.678 ERROR [test2] Exception 7001: Three-phase Meter Communication Failure at timestamp 1753349422000
+2025-07-24 15:44:50.901 INFO [test1] Data synchronization completed
+2025-07-24 15:44:55.234 WARN [test3] Grid frequency deviation: 49.8Hz
+2025-07-24 15:45:00.567 INFO [test4] System performance normal: CPU=25%, Memory=60%
+2025-07-24 15:45:05.890 ERROR [test5] Database connection failed: timeout after 30s
+2025-07-24 15:45:10.123 INFO [test1] Emergency charge mode: DISABLED
+2025-07-24 15:45:15.456 WARN [test2] High load detected: 95% capacity
+2025-07-24 15:45:20.789 INFO [test3] Backup completed successfully
+2025-07-24 15:45:25.012 ERROR [test4] Inverter fault: Code=F001, Description=DC overvoltage
+2025-07-24 15:45:30.345 INFO [test1] Daily report generated: Energy=125kWh, Efficiency=92%
+2025-07-24 15:45:35.678 WARN [test2] Memory usage high: 85% of available RAM
+2025-07-24 15:45:40.901 INFO [test3] Maintenance mode activated
+2025-07-24 15:45:45.234 ERROR [test4] Exception 1203: Grid RMS Undervoltage Level 1 at timestamp 1753349434000
+2025-07-24 15:45:50.567 INFO [test5] Configuration updated successfully
+2025-07-24 15:46:00.123 INFO [1234] Device 1234 initialized successfully
+2025-07-24 15:46:05.456 INFO [1234] OMS system startup: Version 2.1.3, Build 20250724
+2025-07-24 15:46:10.789 INFO [device-A001] Power inverter online: Model=SUN-5K, Serial=A001234567
+2025-07-24 15:46:15.012 WARN [device-A001] DC input voltage fluctuation: 580V -> 565V
+2025-07-24 15:46:20.345 INFO [1234] Battery management system connected: Cells=16, Voltage=51.2V
+2025-07-24 15:46:25.678 ERROR [device-B002] Communication timeout with energy meter
+2025-07-24 15:46:30.901 INFO [device-B002] Meter communication restored after 5 seconds
+2025-07-24 15:46:35.234 INFO [1234] Solar panel array status: 12 panels, 3.6kW peak power
+2025-07-24 15:46:40.567 WARN [device-A001] High temperature alert: Inverter temp=65°C
+2025-07-24 15:46:45.890 INFO [device-C003] Grid tie inverter synchronized: Frequency=50.0Hz
+2025-07-24 15:46:50.123 ERROR [1234] Exception 2001: Battery undervoltage protection triggered
+2025-07-24 15:46:55.456 INFO [device-C003] Load balancing activated: Phase A=8A, B=7A, C=9A
+2025-07-24 15:47:00.789 WARN [device-B002] Power factor correction needed: PF=0.85
+2025-07-24 15:47:05.012 INFO [1234] Energy statistics: Generated=45.2kWh, Consumed=38.7kWh
+2025-07-24 15:47:10.345 ERROR [device-A001] Exception 3001: DC arc fault detected on string 2
+2025-07-24 15:47:15.678 INFO [device-D004] Smart switch array initialized: 8 channels active
+2025-07-24 15:47:20.901 INFO [1234] Remote monitoring connection established
+2025-07-24 15:47:25.234 WARN [device-D004] Switch channel 3 overcurrent: 16A > 15A limit
+2025-07-24 15:47:30.567 INFO [device-C003] Maximum power point tracking optimized
+2025-07-24 15:47:35.890 ERROR [device-B002] Exception 4001: Three-phase imbalance detected
+2025-07-24 15:47:40.123 INFO [1234] System self-test completed: All components OK
+2025-07-24 15:47:45.456 INFO [device-E005] Weather station online: Temp=25°C, Humidity=60%
+2025-07-24 15:47:50.789 WARN [device-E005] Wind speed high: 15m/s, reducing panel efficiency
+2025-07-24 15:47:55.012 INFO [1234] Automatic load shedding disabled: Grid stable
+2025-07-24 15:48:00.345 ERROR [device-A001] Inverter shutdown: Overvoltage protection
+2025-07-24 15:48:05.678 INFO [device-F006] Backup generator standby mode activated
+2025-07-24 15:48:10.901 WARN [1234] Battery charge level low: 25% remaining
+2025-07-24 15:48:15.234 INFO [device-F006] Generator auto-start sequence initiated
+2025-07-24 15:48:20.567 INFO [device-G007] Energy storage system charging from generator
+2025-07-24 15:48:25.890 ERROR [device-G007] Exception 5001: Battery cell imbalance detected
+2025-07-24 15:48:30.123 INFO [1234] Load priority management: Critical loads maintained
+2025-07-24 15:48:35.456 WARN [device-H008] Cooling system activation: Ambient temp=35°C
+2025-07-24 15:48:40.789 INFO [device-H008] Thermal management optimal: All temps normal
+2025-07-24 15:48:45.012 INFO [1234] Daily energy report: Peak generation=4.2kW at 13:30
+2025-07-24 15:48:50.345 ERROR [device-I009] Network communication lost: Switching to local mode
+2025-07-24 15:48:55.678 INFO [device-I009] Local operation mode active: Limited functionality
+2025-07-24 15:49:00.901 WARN [1234] Maintenance schedule overdue: Last service 90 days ago
+2025-07-24 15:49:05.234 INFO [device-J010] Data logger sync: 2,456 records uploaded
+2025-07-24 15:49:10.567 INFO [testDevice123] Device testDevice123 coming online
+2025-07-24 15:49:15.890 ERROR [testDevice123] Initialization failed: Configuration file corrupted
+2025-07-24 15:49:20.123 INFO [testDevice123] Fallback configuration loaded successfully
+2025-07-24 15:49:25.456 WARN [device-K011] Firmware update available: v3.2.1 -> v3.2.5
+2025-07-24 15:49:30.789 INFO [1234] Performance optimization completed: 5% efficiency gain
+2025-07-25 08:00:15.123 INFO [1234] Daily startup sequence initiated
+2025-07-25 08:00:20.456 INFO [device-A001] Morning system check: All parameters normal
+2025-07-25 08:00:25.789 WARN [1234] Battery temperature slightly elevated: 28°C
+2025-07-25 08:00:30.012 INFO [device-B002] Solar panel cleaning cycle completed
+2025-07-25 08:00:35.345 ERROR [device-C003] Exception 6001: Grid synchronization failure
+2025-07-25 08:00:40.678 INFO [testDevice123] TestDevice123 daily health check passed
+2025-07-25 08:00:45.901 INFO [1234] Energy forecast: Expected generation 52kWh today
+2025-07-26 09:15:30.234 INFO [1234] Mid-week performance review initiated
+2025-07-26 09:15:35.567 WARN [device-D004] Inverter efficiency below optimal: 88%
+2025-07-26 09:15:40.890 INFO [1234] Load balancing optimization completed
+2025-07-26 09:15:45.123 ERROR [device-E005] Exception 7001: Weather station communication lost
+2025-07-26 09:15:50.456 INFO [device-E005] Weather station reconnected successfully
+2025-07-26 09:15:55.789 INFO [testDevice123] Configuration backup completed
+2025-07-26 09:16:00.012 WARN [1234] Peak demand approaching: Prepare load shedding
+2025-07-27 14:30:45.345 INFO [1234] Afternoon peak generation active
+2025-07-27 14:30:50.678 INFO [device-F006] Maximum power point tracking optimized
+2025-07-27 14:30:55.901 WARN [device-G007] High ambient temperature: 38°C
+2025-07-27 14:31:00.234 ERROR [1234] Exception 8001: Thermal protection activated
+2025-07-27 14:31:05.567 INFO [device-H008] Cooling system performance: Excellent
+2025-07-27 14:31:10.890 INFO [testDevice123] Real-time monitoring data uploaded
+2025-07-27 14:31:15.123 WARN [1234] Grid voltage instability detected
+2025-07-28 16:45:20.456 INFO [1234] Weekend maintenance window started
+2025-07-28 16:45:25.789 INFO [device-I009] System diagnostics: All components OK
+2025-07-28 16:45:30.012 WARN [device-J010] Firmware update recommended: Security patch
+2025-07-28 16:45:35.345 ERROR [testDevice123] Exception 9001: Memory allocation failed
+2025-07-28 16:45:40.678 INFO [testDevice123] Memory issue resolved: Garbage collection
+2025-07-28 16:45:45.901 INFO [1234] Weekly energy report: Total generation 245kWh
+2025-07-28 16:45:50.234 WARN [1234] Battery cycle count increasing: 1,250 cycles
+2025-07-29 10:20:15.567 INFO [1234] New week initialization sequence
+2025-07-29 10:20:20.890 INFO [device-K011] System performance metrics updated
+2025-07-29 10:20:25.123 WARN [device-L012] Network latency elevated: 180ms
+2025-07-29 10:20:30.456 ERROR [1234] Exception 10001: Database connection timeout
+2025-07-29 10:20:35.789 INFO [1234] Database connection restored
+2025-07-29 10:20:40.012 INFO [testDevice123] Monthly statistics calculation started
+2025-07-29 10:20:45.345 WARN [device-M013] Storage space utilization: 78%

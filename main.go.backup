@@ -1,0 +1,144 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"strings"
+
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+)
+
+// 环境配置
+var environments = map[string]string{
+	"dev":     "mm01.sca.im",
+	"test":    "test-server.company.com",
+	"staging": "staging-server.company.com",
+	"prod":    "prod-server.company.com",
+}
+
+// 日志文件配置
+var logFiles = map[string]string{
+	"blackhole": "/var/log/app/blackhole.log",
+	"oms":       "/data/develop/oms/logs/oms.log",
+}
+
+func main() {
+	// 创建MCP服务器
+	mcpServer := server.NewMCPServer(
+		"Log Command Generator",
+		"1.0.0",
+		server.WithToolCapabilities(true),
+	)
+
+	// 添加生成日志查看命令的工具
+	mcpServer.AddTool(mcp.NewTool("generate_log_command",
+		mcp.WithDescription("生成日志查看命令"),
+		mcp.WithString("environment",
+			mcp.Description("环境 (dev/test/staging/prod)"),
+			mcp.Required(),
+		),
+		mcp.WithString("log_type",
+			mcp.Description("日志类型 (blackhole/黑洞/oms/api/error/错误)"),
+			mcp.Required(),
+		),
+		mcp.WithString("keyword",
+			mcp.Description("搜索关键词（可选）"),
+		),
+		mcp.WithString("lines",
+			mcp.Description("显示行数（默认1000行）"),
+			mcp.DefaultString("1000"),
+		),
+	), handleGenerateLogCommand)
+
+	// 添加环境列表工具
+	mcpServer.AddTool(mcp.NewTool("list_environments",
+		mcp.WithDescription("列出所有可用环境"),
+	), handleListEnvironments)
+
+	// 启动服务器
+	log.Println("Starting Log Command Generator MCP Server...")
+	if err := server.ServeStdio(mcpServer); err != nil {
+		log.Fatalf("Server error: %v", err)
+	}
+}
+
+func handleGenerateLogCommand(
+	ctx context.Context,
+	request mcp.CallToolRequest,
+) (*mcp.CallToolResult, error) {
+	arguments := request.GetArguments()
+
+	// 获取环境
+	env, ok := arguments["environment"].(string)
+	if !ok {
+		return nil, fmt.Errorf("环境参数无效")
+	}
+
+	server, exists := environments[env]
+	if !exists {
+		return nil, fmt.Errorf("未知环境: %s", env)
+	}
+
+	// 获取日志类型
+	logType, ok := arguments["log_type"].(string)
+	if !ok {
+		return nil, fmt.Errorf("日志类型参数无效")
+	}
+
+	logPath, exists := logFiles[logType]
+	if !exists {
+		return nil, fmt.Errorf("未知日志类型: %s", logType)
+	}
+
+	// 获取行数
+	lines := "1000"
+	if l, ok := arguments["lines"].(string); ok && l != "" {
+		lines = l
+	}
+
+	// 构建基础命令
+	var command strings.Builder
+	command.WriteString(fmt.Sprintf("ssh -t develop@%s -p 59822 'tail -%s %s", server, lines, logPath))
+
+	// 添加关键词过滤
+	if keyword, ok := arguments["keyword"].(string); ok && keyword != "" {
+		command.WriteString(fmt.Sprintf(" | grep -i \"%s\"", keyword))
+	}
+
+	command.WriteString("'")
+
+	finalCommand := command.String()
+
+	return &mcp.CallToolResult{
+		Content: []mcp.Content{
+			mcp.TextContent{
+				Type: "text",
+				Text: fmt.Sprintf("🔧 **生成的日志查看命令**\n\n**环境**: %s\n**日志文件**: %s\n**行数**: %s\n\n```bash\n%s\n```\n\n💡 复制上述命令到终端执行即可查看日志",
+					env, logPath, lines, finalCommand),
+			},
+		},
+	}, nil
+}
+
+func handleListEnvironments(
+	ctx context.Context,
+	request mcp.CallToolRequest,
+) (*mcp.CallToolResult, error) {
+	var result strings.Builder
+	result.WriteString("🌍 **可用环境列表**\n\n")
+
+	for env, server := range environments {
+		result.WriteString(fmt.Sprintf("- **%s**: %s\n", env, server))
+	}
+
+	return &mcp.CallToolResult{
+		Content: []mcp.Content{
+			mcp.TextContent{
+				Type: "text",
+				Text: result.String(),
+			},
+		},
+	}, nil
+}

@@ -1,0 +1,20 @@
+2025-07-24 16:30:15.123 INFO [test-device-001] Test environment OMS system startup
+2025-07-24 16:30:20.456 INFO [test-device-001] Test data initialization completed
+2025-07-24 16:30:25.789 WARN [test-device-002] Test battery voltage low: 11.8V
+2025-07-24 16:30:30.012 ERROR [test-device-001] Exception T001: Test grid connection failed
+2025-07-24 16:30:35.345 INFO [test-device-002] Test inverter online: Model=TEST-3K
+2025-07-24 16:30:40.678 INFO [1234] Device 1234 in test environment started
+2025-07-24 16:30:45.901 WARN [1234] Test mode: Simulated load 2.5kW
+2025-07-24 16:30:50.234 INFO [test-device-003] Test solar panel array: 6 panels
+2025-07-24 16:30:55.567 ERROR [test-device-003] Exception T002: Test communication timeout
+2025-07-24 16:31:00.890 INFO [1234] Test energy report: Generated=15kWh, Consumed=12kWh
+2025-07-25 10:15:30.123 INFO [1234] Test environment daily check initiated
+2025-07-25 10:15:35.456 WARN [test-device-004] Test temperature sensor reading: 45°C
+2025-07-25 10:15:40.789 INFO [test-device-004] Test cooling system activated
+2025-07-25 10:15:45.012 ERROR [1234] Exception T003: Test database connection lost
+2025-07-25 10:15:50.345 INFO [1234] Test failover to backup database successful
+2025-07-26 14:20:25.678 INFO [1234] Test load balancing scenario started
+2025-07-26 14:20:30.901 WARN [test-device-005] Test network latency high: 200ms
+2025-07-26 14:20:35.234 INFO [test-device-005] Test optimization completed
+2025-07-26 14:20:40.567 ERROR [test-device-006] Exception T004: Test memory leak detected
+2025-07-26 14:20:45.890 INFO [1234] Test performance metrics: CPU=35%, Memory=55% 
